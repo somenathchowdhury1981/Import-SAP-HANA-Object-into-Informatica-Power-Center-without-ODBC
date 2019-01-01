@@ -1,2 +1,2 @@
 # InformaticaPowerCenter
-InformaticaPowerCenter
+Informatica Power Center
