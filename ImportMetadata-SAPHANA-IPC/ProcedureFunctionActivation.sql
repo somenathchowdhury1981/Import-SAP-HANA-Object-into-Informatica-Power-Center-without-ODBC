@@ -315,7 +315,7 @@ BEGIN
 		             a.COLUMN_NAME = b.COLUMN_NAME)
 			  UNION
 			 SELECT VC.SCHEMA_NAME
-			       ,V.COMMENTS
+			       ,V.VIEW_NAME
 			       ,VC.COLUMN_NAME
 			       ,VC.POSITION
 			       ,VC.DATA_TYPE_NAME
