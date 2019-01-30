@@ -60,27 +60,32 @@ set vSelectStmt=%vSelectStmt% XML_GENERATION_USER = UPPER('%username%');
 ::====================================================================================
 :: Prepare and Execute Procedure for XML generation
 ::====================================================================================
+set vMsg=Error occurred to execute XML generation procedure...
 set vhdbsqlstmt1="C:\Program Files\sap\hdbclient\"hdbsql.exe -n
 set vhdbsqlstmt1=%vhdbsqlstmt1% %vSAPHANAhost%:%vSAPHANAport% -i %vSAPHANAInst%
 set vhdbsqlstmt1=%vhdbsqlstmt1% -u %vUserName% -p %vPassword% -x %vCallingProcedure%
 ::echo %vhdbsqlstmt1%
 %vhdbsqlstmt1%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR_HANDLER
 ::====================================================================================
 ::
 ::====================================================================================
 :: Prepare and Execute Procedure for exporting XML into file
 ::====================================================================================
+set vMsg=Error occurred to export XML file...
 set vhdbsqlstmt2="C:\Program Files\sap\hdbclient\"hdbsql.exe -n
 set vhdbsqlstmt2=%vhdbsqlstmt2% %vSAPHANAhost%:%vSAPHANAport% -i %vSAPHANAInst%
 set vhdbsqlstmt2=%vhdbsqlstmt2% -u %vUserName% -p %vPassword% -x -resultencoding UTF8
 set vhdbsqlstmt2=%vhdbsqlstmt2% -a -C -o "%filepathname%" %vSelectStmt%
 ::echo %vhdbsqlstmt2%
 %vhdbsqlstmt2%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR_HANDLER
 ::====================================================================================
 ::
 ::====================================================================================
 :: Prepare pmrep command to connect Informatica Power Center
 ::====================================================================================
+set vMsg=Error occurred to connect Informatica Power Center repository...
 set vpmrepIPCConnect="C:\Program Files\Informatica\10.2.0\clients\
 set vpmrepIPCConnect=%vpmrepIPCConnect%PowerCenterClient\client\bin\pmrep.exe"
 set vpmrepIPCConnect=%vpmrepIPCConnect% connect -r %vIPCRepo% -d %vIPCDomain%
@@ -88,11 +93,13 @@ set vpmrepIPCConnect=%vpmrepIPCConnect% -n %vIPCUserName% -s %vIPCSecurityDomain
 set vpmrepIPCConnect=%vpmrepIPCConnect% -x %vIPCPassword%
 ::echo %vpmrepIPCConnect%
 %vpmrepIPCConnect%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR_HANDLER
 ::====================================================================================
 ::
 ::====================================================================================
 :: Prepare pmrep command to import XML into Informatica Power Center
 ::====================================================================================
+set vMsg=Error occurred to import XML into Informatica Power Center repository...
 set vpmrepIPCImport="C:\Program Files\Informatica\10.2.0\clients\
 set vpmrepIPCImport=%vpmrepIPCImport%PowerCenterClient\client\bin\pmrep.exe"
 set vpmrepIPCImport=%vpmrepIPCImport% ObjectImport -i "%filepathname%"
@@ -101,6 +108,17 @@ set vpmrepIPCImport=%vpmrepIPCImport%clients\PowerCenterClient\client\bin\
 set vpmrepIPCImport=%vpmrepIPCImport%import_control_file.txt"
 ::echo %vpmrepIPCImport%
 %vpmrepIPCImport%
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR_HANDLER
 
+set vMsg=Metadata imported successfully in Informatica Power Center repository...
+GOTO QUIT
+
+:ERROR_HANDLER
+echo %vMsg%
 pause
-goto :Eof
+goto :EOF
+
+:QUIT
+echo %vMsg%
+pause
+goto :EOF

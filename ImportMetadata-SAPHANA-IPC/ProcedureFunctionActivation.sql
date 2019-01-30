@@ -418,10 +418,16 @@ BEGIN
 		   ELSEIF (:p_xml_content_id = 6 OR :p_xml_content_id = 13) AND l_xml_variable.XML_CONTENT_VARIABLE = 'NAME' THEN
 		   		
 		   		IF LENGTH(:p_object_name) > 30 THEN
-		   			v_object_name := LEFT(SUBSTR_AFTER (:p_object_name,'::'),27)||'_'||TO_CHAR(CAST((RAND()*66)+1 AS BIGINT));
-		   		ELSE
-		   			v_object_name := :p_object_name;
-		   		END IF;
+		        	v_object_name := UPPER(CASE WHEN INSTR(:p_object_name,'::',1) > 0 THEN
+		                                        	LEFT(SUBSTR_AFTER (:p_object_name,'::'),27)||'_'||TO_CHAR(CAST((RAND()*66)+1 AS BIGINT))
+		                                        WHEN INSTR(:p_object_name,'/',1) > 0 THEN
+		                                            LEFT(SUBSTR_AFTER (:p_object_name,'/'),27)||'_'||TO_CHAR(CAST((RAND()*66)+1 AS BIGINT))
+		                                        ELSE
+		                                            RIGHT(:p_object_name,30) 
+		                                   END);
+		        ELSE
+		        	v_object_name := UPPER(:p_object_name);
+		        END IF;
 		   		--
 		   		v_var_val := v_var_val||'="'||v_object_name||'" ';
 		   ELSEIF :p_xml_content_id = 2 OR :p_xml_content_id = 9 THEN
