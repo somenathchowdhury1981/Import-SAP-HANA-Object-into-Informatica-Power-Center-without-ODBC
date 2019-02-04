@@ -20,7 +20,7 @@ SAP HANA Client and Informatica Power Center (v10.x) are required as a prerequis
 ### Installation
 Process steps of this tool are available in (ImportSAPHANAObject_Into_IPC_without_ODBC.pdf) document.
 
-## Running the tests
+### Running the tests
 
 Execution Steps are as follows:
 
