@@ -25,19 +25,20 @@ set vIPCPassword=xxxxxxxx
 ::====================================================================================
 :: User Input
 ::====================================================================================
-set vPrompt=Enter Output File Path and Name
-set vPrompt=%vPrompt% (Example: C:\Users\INFA.xml):
-set /p filepathname=%vPrompt%
-
 set vPrompt=Enter Informatica Power Center Folder Name
 set vPrompt=%vPrompt% (Example: XXXXX_99_XXXXX_99):
 set /p folderNameIPC=%vPrompt%
 
 set /p exportSchemaName=Enter Schema Name:
+
 set vPrompt=Enter Table Or View Name:
 set /p exportTableViewName=%vPrompt%
 
 set /p typeOfExport=Enter Type of XML (Example: SOURCE or TARGET):
+
+set filepathname=%CD%\%typeOfExport%_%folderNameIPC%.xml
+echo %filepathname%
+if exist %filepathname% del %filepathname%
 ::====================================================================================
 :: Prepare SQL statement for XML generator procedure in SAP HANA
 ::====================================================================================
@@ -81,6 +82,8 @@ set vhdbsqlstmt2=%vhdbsqlstmt2% -a -C -o "%filepathname%" %vSelectStmt%
 %vhdbsqlstmt2%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR_HANDLER
 ::====================================================================================
+::
+echo %filepathname% is generated successfully....
 ::
 ::====================================================================================
 :: Prepare pmrep command to connect Informatica Power Center
