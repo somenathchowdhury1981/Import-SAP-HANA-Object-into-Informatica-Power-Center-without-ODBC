@@ -3,7 +3,7 @@
 Import SAP HANA Object into Informatica Power Center without ODBC
 
 ## Project Developer
-Somenath Chowdhury (somenath.chowdhury@ymail.com)
+Somenath Chowdhury (somenathchwdhr@ymail.com)
 
 ## What does this utility do?
 This tool imports metadata of SAP HANA objects (Tables or View) into Informatica Power Center v10.2 without ODBC driver at client machine.
